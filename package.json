@@ -1,0 +1,30 @@
+{
+  "name": "kernel-designer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "parcel src/index.html --out-dir development --hmr-port $PARCEL_HMR_PORT -p $PARCEL_PORT",
+    "build": "parcel build src/index.html --out-dir dist --public-url ./"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^4.5.0",
+    "drei": "0.0.64",
+    "jquery": "^3.5.1",
+    "popper.js": "^1.16.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-three-fiber": "^4.2.17",
+    "three": "^0.118.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.10.5",
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
+    "@fortawesome/fontawesome-free": "^5.14.0",
+    "parcel-bundler": "^1.12.4",
+    "sass": "^1.26.10"
+  }
+}
