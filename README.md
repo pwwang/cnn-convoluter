@@ -9,6 +9,11 @@ https://pwwang.github.io/cnn-convoluter/
 ## Building your own version
 ```shell
 # clone this repo
+# install dependencies
+npm install
+# run a dev-server
+npm run dev
+# or build the app
 npm run build
 ```
 

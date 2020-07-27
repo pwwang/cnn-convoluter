@@ -92,6 +92,7 @@ function App() {
 
     function visualClick(event) {
         if (settings.dimty == 3) {
+            window.alert('Visualization for 3D is not supported yet.')
             return;
         }
         setVisual(!visual);
