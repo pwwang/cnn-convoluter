@@ -1,5 +1,5 @@
 {
-  "name": "kernel-designer",
+  "name": "cnn-convoluter",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -12,13 +12,11 @@
   "license": "ISC",
   "dependencies": {
     "bootstrap": "^4.5.0",
-    "drei": "0.0.64",
     "jquery": "^3.5.1",
     "popper.js": "^1.16.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-three-fiber": "^4.2.17",
-    "three": "^0.118.3"
+    "react-tooltip": "^4.2.7"
   },
   "devDependencies": {
     "@babel/core": "^7.10.5",

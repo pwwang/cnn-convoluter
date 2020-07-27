@@ -3,6 +3,14 @@ import Settings from './Settings'
 import Kernel from './Kernel'
 import Show from './Show'
 
+function padDimension(dim, dimty, padNumber) {
+    if (dim.length === dimty)
+        return dim;
+
+    const toPad = Array(dimty - dim.length).fill(padNumber);
+    return [...toPad, ...dim];
+}
+
 function App() {
     let defaultSettings = {
         1: {
@@ -36,27 +44,57 @@ function App() {
             }
         },
     }
-    const [settings, setSettings] = useState(defaultSettings[1]);
+    const [settings, setSettings] = useState(padSettings(defaultSettings[1]));
+    const [autoWalker, setAutoWalker] = useState(true);
+    const [visual, setVisual] = useState(true);
+
+    function padSettings(sets) {
+        const ret = {...sets};
+        ret.input = padDimension(ret.input, 3, 1);
+        ret.kernel.size = padDimension(ret.kernel.size, 3, 1);
+        ret.kernel.stride = padDimension(ret.kernel.stride, 3, 1);
+        ret.kernel.padding = padDimension(ret.kernel.padding, 3, 0);
+        ret.kernel.dilation = padDimension(ret.kernel.dilation, 3, 1);
+        return ret;
+    }
 
     function dimtyChange(event) {
         event.stopPropagation();
         event.preventDefault();
         let dimty = parseInt(event.target.dataset.dimty);
-        setSettings(defaultSettings[dimty]);
+        setSettings(padSettings(defaultSettings[dimty]));
+    }
+
+    function fallback(value, defaultValue) {
+        // try to make input a valid number
+        // if not, fallback to default if value isn't a number
+        value = value.replace(/[^\d]+/g, '');
+        return (value.length > 0 && !isNaN(value)) ? parseInt(value) : defaultValue;
     }
 
     function inDimChange(event) {
         let index = parseInt(event.target.name.replace("dim", ""))
         let settingsCopy = {...settings}
-        settingsCopy.input[index - 1] = parseInt(event.target.value)
+        settingsCopy.input[index] = fallback(event.target.value, settings[index]);
         setSettings(settingsCopy);
     }
 
     function kernelChange(what, event) {
         let index = parseInt(event.target.name.replace("dim", ""))
         let settingsCopy = {...settings}
-        settingsCopy.kernel[what][index - 1] = parseInt(event.target.value)
+        settingsCopy.kernel[what][index] = fallback(event.target.value, settings.kernel[what][index]);
         setSettings(settingsCopy);
+    }
+
+    function autoWalkerClick(event) {
+        setAutoWalker(!autoWalker);
+    }
+
+    function visualClick(event) {
+        if (settings.dimty == 3) {
+            return;
+        }
+        setVisual(!visual);
     }
 
     return (
@@ -66,14 +104,19 @@ function App() {
                     <Settings settings={settings}
                         dimtyChange={dimtyChange}
                         inDimChange={inDimChange}
-                        kernelChange={kernelChange} />
+                        kernelChange={kernelChange}
+                        autoWalker={autoWalker}
+                        autoWalkerClick={autoWalkerClick}
+                        visual={visual}
+                        visualClick={visualClick}
+                        />
                 </div>
-                <div className="flex-grow-9x pl-1 d-flex flex-column h-100">
-                    <div className={`h-${settings.dimty}d`}>
+                <div className="flex-grow-9x w-any pl-1 d-flex flex-column h-100">
+                    <div>
                         <Kernel kernelSize={settings.kernel.size} />
                     </div>
-                    <div className={`flex-grow-1 h-${settings.dimty}d-rest`}>
-                        <Show {...settings} />
+                    <div className="flex-grow-1 h-any">
+                        <Show {...settings} visual={visual} autoWalker={autoWalker} />
                     </div>
                 </div>
             </div>

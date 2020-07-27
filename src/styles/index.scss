@@ -55,3 +55,55 @@ $height-3d: 35%;
 .h-3d-rest {
   height: calc(100% - #{$height-3d});
 }
+
+.h-any {
+  height: 300px;
+}
+
+.w-any {
+  width: 300px;
+}
+
+.overflow-x-auto {
+  overflow-x: auto;
+}
+
+.box {
+  height: 16px;
+  width: 16px;
+  display: inline-block;
+  margin: 1px;
+}
+
+.box-small {
+  height: 10px !important;
+  width: 10px !important;
+}
+
+.box-row {
+  text-align: center;
+  line-height: .8;
+  white-space: nowrap;
+}
+
+.box-kernel {
+  background-color: #810081;
+}
+
+.box-padding {
+  background-color: #8d8d8d !important;
+}
+
+.box-input {
+  background-color: #006e60;
+  opacity: .5;
+}
+
+.box-output {
+  background-color: #002792;
+  opacity: .5;
+}
+
+.box-active {
+  opacity: 1 !important;
+}

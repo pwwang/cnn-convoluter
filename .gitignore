@@ -117,3 +117,5 @@ dist
 development/
 .in.fish
 .out.fish
+
+package-lock.json

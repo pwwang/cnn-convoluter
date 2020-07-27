@@ -1,25 +1,28 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-function DimensionalityRadio(props) {
+function DimensionalityRadio({value, disabled, dimty, dimtyChange}) {
     return <label className={"btn btn-primary " + (
-            props.value === 1 ? 'active' : ''
-        )} onClick={props.dimtyChange} data-dimty={props.value}>
+            value === 1 ? 'active' : ''
+        ) + (disabled ? ' disabled' : '')} onClick={disabled ? undefined : dimtyChange}
+            data-dimty={value}>
         <input type="radio" name="dimty_options" className="form-control"
             autoComplete="off"
-            checked={props.dimty === props.value}
-            readOnly /> {props.value}D
+            disabled={disabled}
+            checked={dimty === value}
+            readOnly /> {value}D
     </label>
 }
 
-function SettingsInputDimensionality(props) {
+function SettingsInputDimensionality({dimty, dimtyChange, visual}) {
 
     return <div className="btn-group-sm btn-group-toggle input-dimensionality"
                 data-toggle="buttons">
         {[1, 2, 3].map(val => <DimensionalityRadio
             key={"dimty" + val}
             value={val}
-            dimty={props.dimty}
-            dimtyChange={props.dimtyChange}
+            disabled={val == 3 && visual}
+            dimty={dimty}
+            dimtyChange={dimtyChange}
         />)}
     </div>;
 };
