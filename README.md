@@ -2,7 +2,7 @@
 
 An interactive player for CNN convolution
 
-http://pwwang.github.io/cnn-convoluter/
+https://pwwang.github.io/cnn-convoluter/
 
 ![cnn-convoluter](./cnn-convoluter.gif)
 
