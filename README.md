@@ -24,8 +24,5 @@ npm run build
 
 ## Todos
 
-- [ ] Probable optimizations for React usage (This is my first react app)
-- [ ] 3D visualization support (need to find a good but simple 3D engine)
 - [ ] Transposed convolution?
-- [ ] Pooling layers/Activation?
 - [ ] Loading data?

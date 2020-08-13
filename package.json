@@ -1,28 +1,24 @@
 {
   "name": "cnn-convoluter",
+  "license": "MIT",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
   "scripts": {
-    "dev": "parcel src/index.html --out-dir development --hmr-port $PARCEL_HMR_PORT -p $PARCEL_PORT",
-    "build": "parcel build src/index.html --out-dir dist --public-url ./"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "bootstrap": "^4.5.0",
-    "jquery": "^3.5.1",
-    "popper.js": "^1.16.1",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-tooltip": "^4.2.7"
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "start": "kill $(lsof -ti:$DEV_PORT); sirv public --port $DEV_PORT"
   },
   "devDependencies": {
-    "@babel/core": "^7.10.5",
-    "@babel/plugin-proposal-class-properties": "^7.10.4",
-    "@fortawesome/fontawesome-free": "^5.14.0",
-    "parcel-bundler": "^1.12.4",
-    "sass": "^1.26.10"
+    "@rollup/plugin-commonjs": "^12.0.0",
+    "@rollup/plugin-node-resolve": "^8.0.0",
+    "rollup": "^2.3.4",
+    "rollup-plugin-livereload": "^1.0.0",
+    "rollup-plugin-svelte": "^5.0.3",
+    "rollup-plugin-terser": "^5.1.2",
+    "svelte": "^3.0.0",
+    "uuid": "^8.3.0"
+  },
+  "dependencies": {
+    "sirv-cli": "^1.0.0",
+    "smelte": "^1.0.15"
   }
 }

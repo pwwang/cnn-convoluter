@@ -114,7 +114,7 @@ dist
 
 # End of https://www.toptal.com/developers/gitignore/api/node
 
-development/
+/public/build/
 .in.fish
 .out.fish
 
