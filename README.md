@@ -19,8 +19,9 @@ npm run build
 
 ## Implementation
 
-- React
-- Bootstrap
+- Svelte
+- Smelte
+- CSS 3D for 3D drawing
 
 ## Todos
 
