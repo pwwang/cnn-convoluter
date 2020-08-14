@@ -24,7 +24,7 @@ const dispatcher = createEventDispatcher();
 
 const activate = () => {
     dispatcher('activate', {
-        coord: [irow, icol]
+        coord: irow === undefined ? [icol] : [irow, icol]
     });
 };
 

@@ -44,7 +44,7 @@ $: isActive = (irow, icol) => {
             <Box2d
                 isPadding={isPadding(irow, icol)}
                 isActive={isActive(irow, icol)}
-                irow={irow}
+                irow={dim.length === 1 ? undefined : irow}
                 icol={icol}
                 type={type}
                 on:activate
