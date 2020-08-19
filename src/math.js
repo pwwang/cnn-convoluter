@@ -412,7 +412,7 @@ export class Matrix {
         return ret;
     }
 
-    conv(padding, kernel, dilation, stride) {
+    conv(padding, kernel, dilation, stride, type='conv') {
         // expecting a result where we have input coord <=> output coord mappings
         // as well as the mulsum number
         if (!(kernel instanceof Matrix))
@@ -424,7 +424,7 @@ export class Matrix {
         if (stride.length !== this.size.length)
             throw `Stride dimensionality mismatch, expect ${this.size.length}, got ${stride.length}`;
 
-        return new Convolution(this, padding, kernel, dilation, stride);
+        return new Convolution(this, padding, kernel, dilation, stride, type);
     }
 
     flatten() {
@@ -467,12 +467,13 @@ export class Matrix {
 class Convolution {
     // a convoluted object, that enables queries from either input
     // or output coordinates, together with the results
-    constructor(data, padding, kernel, dilation, stride) {
+    constructor(data, padding, kernel, dilation, stride, type='conv') {
         this.data = data.pad(padding); // in + 2*padding
         this.padding = padding;
         this.kernel = kernel.dilate(dilation); // dilation * (kernel - 1) + 1
         this.dilation = dilation;
         this.stride = stride;
+        this.type = type;
         // see: https://pytorch.org/docs/master/generated/torch.nn.Conv1d.html
         // out = Math.floor(  (in + 2*padding - (dilation * (kernel - 1) + 1)) / stride + 1  )
         const outSize = this.data.size.map((s, i) => Math.floor( (s - this.kernel.size[i]) / this.stride[i] + 1 ));
@@ -484,7 +485,13 @@ class Convolution {
     _convolute() {
         this.output = this.output.map((_, ...coords) => {
             const inblock = this.inCoordsToBlockIndexes(this.outCoordsToIn(coords));
-            return this.data.subset(inblock).mulsum(this.kernel);
+            if (this.type === 'conv') {
+                return this.data.subset(inblock).mulsum(this.kernel);
+            } else if (this.type === 'maxpool') {
+                return this.data.subset(inblock).max();
+            } else if (this.type === 'avgpool') {
+                return Number(this.data.subset(inblock).mean()).toFixed(1);
+            }
         });
     }
 

@@ -73,7 +73,11 @@ onMount(() => dispatcher('mount'));
                         iy={iy}
                         iz={iz}
                         type={type}
-                        data={showData ? dataPadded.data[ix][iy][iz]: ''}
+                        data={showData ? (
+                            !data.type || data.type === 'conv' ?
+                                dataPadded.data[ix][iy][iz] :
+                                data.type[0]
+                        ) : ''}
                         posStyle={getPosStyle(
                             ix, iy, iz,
                             dataPadded.size[0], dataPadded.size[1], dataPadded.size[2],

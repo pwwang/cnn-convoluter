@@ -19,7 +19,8 @@ $: convoluted = dims.input.data.conv(
 	dims.input.padding,
 	dims.kernel.data,
 	dims.kernel.dilation,
-	dims.kernel.stride
+	dims.kernel.stride,
+	dims.kernel.type
 );
 
 let inActives;

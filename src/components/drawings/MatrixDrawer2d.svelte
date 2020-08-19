@@ -59,9 +59,11 @@ $: isActive = (irow, icol) => {
                 irow={data.size.length === 1 ? undefined : irow}
                 icol={icol}
                 type={type}
-                data={showData ? (data.size.length === 1 ?
-                    dataPadded.data[icol] :
-                    dataPadded.data[irow][icol]) : ''}
+                data={showData ? (!data.type || data.type === 'conv' ? (
+                        data.size.length === 1 ?
+                        dataPadded.data[icol] :
+                        dataPadded.data[irow][icol]
+                    ) : data.type[0]) : ''}
                 on:activate
                 on:deactivate
                 size={boxsize} />
