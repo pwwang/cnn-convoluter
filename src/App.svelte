@@ -95,12 +95,17 @@ let winHeight;
 let winWidth;
 
 $: rotateScene = (newX, newY) => {
-    sceneKernel.style.transform =
-        'rotateY('+ newY +'deg) rotateX('+ newX +'deg)';
-    sceneInput.style.transform =
-        'rotateY('+ newY +'deg) rotateX('+ newX +'deg)';
-    sceneOutput.style.transform =
-        'rotateY('+ newY +'deg) rotateX('+ newX +'deg)';
+	if (sceneKernel)
+		sceneKernel.style.transform =
+			'rotateY('+ newY +'deg) rotateX('+ newX +'deg)';
+
+	if (sceneInput)
+		sceneInput.style.transform =
+			'rotateY('+ newY +'deg) rotateX('+ newX +'deg)';
+
+	if (sceneOutput)
+		sceneOutput.style.transform =
+			'rotateY('+ newY +'deg) rotateX('+ newX +'deg)';
 
 	if (sceneKernelInput)
 		sceneKernelInput.style.transform =
