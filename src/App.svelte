@@ -1,90 +1,42 @@
 <script>
 import { Snackbar } from 'smelte';
+import { incrToCoords } from './math.js';
 import Header from "./components/Header.svelte";
 import Settings from "./components/Settings.svelte";
 import Kernel from "./components/Kernel.svelte";
 import Input from "./components/Input.svelte";
 import Output from "./components/Output.svelte";
-import defaultSettings from "./defaults.js";
+import {
+	defaultSettings,
+	copySettings
+} from "./settings.js";
 
-let settings = JSON.parse(JSON.stringify(defaultSettings));
+let settings = 	copySettings(defaultSettings);
 // The default angle for the cube view
 const defaultAngle = 30;
 
-//// helper functions
-// calculate the real kernel size with dilation
-const getRealKernelSize = (kernelSize, dialtion) => {
-	return kernelSize.map((ks, i) => dialtion[i] * (ks - 1) + 1)
-};
+$: dims = settings.dims[settings.dimty];
 
-// get the chunks by the stride at idim dimension
-// the chunks only has the start
-// The indexes of the elements in chunks should be corresponding to
-// the output
-const getChunks = (input, padding, realKS, stride) => {
-	const totalLen = input + 2 * padding;
-	const ret = [];
-	let cur = 1;
-	while (cur <= totalLen - realKS + 1) {
-		// make it 0-based for searching
-		ret.push(cur - 1);
-		cur += stride
-	}
-	return ret;
-};
-
-// find the chunk by given index
-const findChunk = (chunks, i) => {
-	// i should be 0-based
-	// return the right-most chunk
-	for (let index = chunks.length - 1; index >= 0; index--) {
-		if (i >= chunks[index]) {
-			return index
-		}
-	}
-	return null;
-};
-
-// expand the chunks with size and dialtion
-// so that the indexes in it will be highlighted
-const expandChunk = (start, size, dilation=1) => {
-    const ret = [];
-    let i = 0;
-    while (i < size) {
-        ret.push(i + start);
-        i += dilation;
-    }
-    return ret;
-}
-
-$: realKernelSize = getRealKernelSize(
-	settings.dims[settings.dimty].kernel.size,
-	settings.dims[settings.dimty].kernel.dilation
+$: convoluted = dims.input.data.conv(
+	dims.input.padding,
+	dims.kernel.data,
+	dims.kernel.dilation,
+	dims.kernel.stride
 );
 
-$: allChunks = settings.dims[settings.dimty].input.map((inp, i) => getChunks(
-	inp,
-	settings.dims[settings.dimty].kernel.padding[i],
-	realKernelSize[i],
-	settings.dims[settings.dimty].kernel.stride[i]
-));
-
-$: output = allChunks.map(chunks => chunks.length);
-
 let inActives;
-let outAcitves;
+let outActives;
 
 $: activateOutput = (coord) => {
-	outAcitves = coord.map(co => [co]);
-	inActives = coord.map((co, i) => expandChunk(
-		allChunks[i][co],
-		realKernelSize[i],
-		settings.dims[settings.dimty].kernel.dilation[i]
-	));
+	outActives = coord.map(co => [co]);
+	inActives = convoluted.inCoordsToBlockIndexes(
+		convoluted.outCoordsToIn(coord), false
+	);
 };
 
 $: activateInput = (coord) => {
-	const outCoord = coord.map((co, i) => findChunk(allChunks[i], co));
+	const outCoord = convoluted.inCoordsToOut(coord);
+	outActives = outCoord.map(co => [co]);
 	activateOutput(outCoord);
 };
 
@@ -106,44 +58,25 @@ const activateOutputBox = (event) => {
 
 const deactivate = () => {
 	inActives = undefined;
-	outAcitves = undefined;
+	outActives = undefined;
 };
 
 // autoWalker
 let interval;
 
-// get the x, y, z from output dimension by an auto-increment index
-const getCoordByWalkIndex = (walkIdx, outputDim) => {
-	const coord = [];
-	const prod = (array) => array.reduce((x, y) => x * y, 1);
-	walkIdx = walkIdx % prod(outputDim);
-
-	let rest = walkIdx;
-	for (let i = 0; i < outputDim.length; i++) {
-		if (i === outputDim.length - 1) {
-			coord.push(rest);
-		} else {
-			const restDim = prod(outputDim.slice(i+1));
-			coord.push(Math.floor(rest / restDim));
-			rest = rest % restDim;
-		}
-	}
-	return coord;
-};
-
 // $ runs twice
 // see: https://github.com/sveltejs/svelte/issues/4265
-let autoWalkerChangeCount = 0;
+let autoWalkerChangeCount = 1;
 $: {
-	++autoWalkerChangeCount;
+	//++autoWalkerChangeCount;
 	if (autoWalkerChangeCount % 2 === 1) {
 		if (settings.autoWalker && !!!interval) {
-			let walkIndex = 0;
+			let walkIndex = -1;
 			interval = setInterval(() => {
-				const coord = getCoordByWalkIndex(walkIndex, output);
+				const coord = incrToCoords(walkIndex, convoluted.output.size);
 				activateOutput(coord);
 				walkIndex ++;
-			}, 400);
+			}, 600);
 		} else if (!settings.autoWalker && interval > 0) {
 			clearInterval(interval);
 			interval = undefined;
@@ -154,19 +87,27 @@ $: {
 
 // 3d view controls
 let sceneKernel;
+let sceneKernelInput;
+let sceneKernelOutput;
 let sceneInput;
 let sceneOutput;
 let controlStart = false;
 let winHeight;
 let winWidth;
 
-const rotateScene = (newX, newY) => {
+$: rotateScene = (newX, newY) => {
     sceneKernel.style.transform =
         'rotateY('+ newY +'deg) rotateX('+ newX +'deg)';
     sceneInput.style.transform =
         'rotateY('+ newY +'deg) rotateX('+ newX +'deg)';
     sceneOutput.style.transform =
         'rotateY('+ newY +'deg) rotateX('+ newX +'deg)';
+	if (sceneKernelInput)
+		sceneKernelInput.style.transform =
+			'rotateY('+ newY +'deg) rotateX('+ newX +'deg)';
+	if (sceneKernelOutput)
+		sceneKernelOutput.style.transform =
+			'rotateY('+ newY +'deg) rotateX('+ newX +'deg)';
 };
 
 // if winHeight/winWidth changes
@@ -181,9 +122,10 @@ $: sceneControl = (event) => {
 	rotateScene(newRotationX, newRotationY);
 };
 
-const resetControl = () => {
+$: resetControl = () => {
 	rotateScene(defaultAngle, 90 + defaultAngle);
 };
+
 </script>
 
 <svelte:window
@@ -206,17 +148,22 @@ const resetControl = () => {
 		</div>
 		<div class="kernel-cell bg-white border rounded-tr-md border-gray-300 mr-3">
 			<Kernel
-				kernel={settings.dims[settings.dimty].kernel}
+				kernel={dims.kernel}
 				visual={settings.visual}
+				showData={settings.showData}
+				inputData={inActives && dims.input.data.pad(dims.input.padding).subset(inActives)}
+				outputData={outActives && convoluted.output.subset(outActives).first()}
 				bind:scene={sceneKernel}
+				bind:scene2={sceneKernelInput}
+				bind:scene3={sceneKernelOutput}
 				on:mount={resetControl}
 				on:mousedown={() => controlStart = true} />
 		</div>
 		<div class="input-cell bg-white border border-gray-300 mb-3">
 			<Input
-				input={settings.dims[settings.dimty].input}
-				padding={settings.dims[settings.dimty].kernel.padding}
+				input={dims.input}
 				visual={settings.visual}
+				showData={settings.showData}
 				actives={inActives}
 				on:activate={activateInputBox}
 				on:deactivate={deactivate}
@@ -226,9 +173,10 @@ const resetControl = () => {
 		</div>
 		<div class="output-cell bg-white border rounded-br-md border-gray-300 mr-3 mb-3">
 			<Output
-				output={output}
+				output={{data: convoluted.output, size: convoluted.output.size}}
 				visual={settings.visual}
-				actives={outAcitves}
+				showData={settings.showData}
+				actives={outActives}
 				on:activate={activateOutputBox}
 				on:deactivate={deactivate}
 				bind:scene={sceneOutput}

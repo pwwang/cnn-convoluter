@@ -7,10 +7,11 @@ export let type;
 export let size;
 export let isPadding;
 export let isActive;
+export let data;
 
-$: sizeClasses = size === 'small' ? 'h-1 w-1' : (
+$: sizeClasses = size === 'with-data' ? 'h-4 w-4' : (size === 'small' ? 'h-1 w-1' : (
     size === 'medium' ? 'h-2 w-2' : 'h-3 w-3'
-);
+));
 
 $: typeClasses = isPadding ? 'bg-gray-500' : (
     type === 'kernel' ? 'bg-primary-900' : (
@@ -34,6 +35,8 @@ const deactivate = () => {
 </script>
 
 <div
-    class="inline-box {sizeClasses} {typeClasses} {activeClasses}"
+    class="text-xs {sizeClasses} {typeClasses} {activeClasses}"
     on:mouseenter={activate}
-    on:mouseleave={deactivate} />
+    on:mouseleave={deactivate}>
+    {data === undefined || isPadding ? '' : data}
+</div>

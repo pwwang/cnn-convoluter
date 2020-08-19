@@ -26,4 +26,4 @@ npm run build
 ## Todos
 
 - [ ] Transposed convolution?
-- [ ] Loading data?
+- [x] Loading data?

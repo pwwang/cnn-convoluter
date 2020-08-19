@@ -4,23 +4,23 @@ import Container from './Container.svelte';
 import MatrixDrawer from './drawings/MatrixDrawer.svelte';
 
 export let input;
-export let padding;
 export let visual;
+export let showData;
 export let actives;
 export let scene
 </script>
 
 <Container>
     <div slot="title">
-        Input [{input}]
+        Input [{input.size}]
     </div>
     <div slot="content" class="text-center">
     {#if visual}
         <MatrixDrawer
-            dim={input}
-            padding={padding}
+            showData={showData}
             actives={actives}
             bind:scene={scene}
+            data={input}
             on:activate
             on:deactivate
             on:mousedown

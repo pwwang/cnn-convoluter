@@ -1,58 +1,109 @@
 <script>
+import { Icon } from 'smelte';
 import Box2d from "./Box2d.svelte";
 
-// The dimension of the matrix
-export let dim;
-// The paddings
-export let padding;
 // The type: kernel/input/output
 export let type;
 // The active boxes
-export let actives = [[]];
+export let actives;
 
-// make it apply to 1d
-$: dim2d = dim.length === 1 ? [1, dim[0]] : dim;
-$: padding2d = padding === undefined ? [0, 0] : (
-    padding.length === 1 ? [0, padding[0]] : padding
+export let showData;
+
+export let data; // input/kernel
+export let inputData;
+// the convoluted data
+export let outputData;
+
+$: dataPadded = data.padding ? data.data.pad(data.padding, 'zero') : data.data;
+$: dataPaddedSize = data.size.length === 1 ? [1, dataPadded.size[0]] : dataPadded.size;
+
+$: maxsize = Math.max.apply(null, dataPaddedSize);
+$: boxsize = showData ? 'with-data' : (
+    maxsize < 40 ? 'large' : (maxsize < 100 ? 'medium' : 'small')
 );
-$: actives2d = actives === undefined ? [[], []] : (
-    actives.length === 1 ? [[0], actives[0]] : actives
-);
-$: nrows = dim2d[0] + 2 * padding2d[0];
-$: ncols = dim2d[1] + 2 * padding2d[1];
-$: maxdim = Math.max(nrows, ncols);
-$: boxsize = maxdim < 40 ? 'large' : (maxdim < 100 ? 'medium' : 'small');
 
 $: isPadding = (irow, icol) => {
-    return irow < padding2d[0] ||
-        irow >= nrows - padding2d[0] ||
-        icol < padding2d[1] ||
-        icol >= ncols - padding2d[1];
+    if (!data.padding)
+        return false;
+    if (data.size.length === 2) {
+        return irow < data.padding[0] ||
+            irow >= dataPaddedSize[0] - data.padding[0] ||
+            icol < data.padding[1] ||
+            icol >= dataPaddedSize[1] - data.padding[1];
+    } else {
+        return icol < data.padding[0] ||
+            icol >= dataPaddedSize[1] - data.padding[0];
+    }
 };
 
 $: isActive = (irow, icol) => {
-    return actives2d[0].includes(irow) && actives2d[1].includes(icol);
+    if (!actives)
+        return false;
+    if (data.size.length === 2) {
+        return actives[0].includes(irow) && actives[1].includes(icol);
+    } else {
+        return actives[0].includes(icol);
+    }
 }
 
 </script>
 
 <div
     class="matrix-wrapper mx-auto"
-    style="--matrix-nrows: {nrows}; --matrix-ncols: {ncols}">
-    {#each Array(nrows) as _, irow}
-        {#each Array(ncols) as _, icol}
+    style="--matrix-nrows: {dataPaddedSize[0]}; --matrix-ncols: {dataPaddedSize[1]}">
+    {#each Array(dataPaddedSize[0]) as _, irow}
+        {#each Array(dataPaddedSize[1]) as _, icol}
             <Box2d
                 isPadding={isPadding(irow, icol)}
                 isActive={isActive(irow, icol)}
-                irow={dim.length === 1 ? undefined : irow}
+                irow={data.size.length === 1 ? undefined : irow}
                 icol={icol}
                 type={type}
+                data={showData ? (data.size.length === 1 ?
+                    dataPadded.data[icol] :
+                    dataPadded.data[irow][icol]) : ''}
                 on:activate
                 on:deactivate
                 size={boxsize} />
         {/each}
     {/each}
 </div>
+
+{#if showData && type === 'kernel'}
+<Icon class="cursor-pointer px-2">clear</Icon>
+
+<div
+    class="matrix-wrapper mx-auto"
+    style="--matrix-nrows: {dataPaddedSize[0]}; --matrix-ncols: {dataPaddedSize[1]}">
+    {#each Array(dataPaddedSize[0]) as _, irow}
+        {#each Array(dataPaddedSize[1]) as _, icol}
+            <Box2d
+                isPadding={isPadding(irow, icol)}
+                isActive={isActive(irow, icol)}
+                irow={data.size.length === 1 ? undefined : irow}
+                icol={icol}
+                type='input'
+                data={inputData && (inputData.size.length === 1 ?
+                    inputData.data[icol] :
+                    inputData.data[irow][icol])}
+                size={boxsize} />
+        {/each}
+    {/each}
+</div>
+
+<Icon class="cursor-pointer px-2">drag_handle</Icon>
+
+<div class="matrix-wrapper">
+    <Box2d
+        isPadding={false}
+        isActive={false}
+        irow={0}
+        icol={0}
+        type='output'
+        data={outputData}
+        size={boxsize} />
+</div>
+{/if}
 
 <style>
 .matrix-wrapper {

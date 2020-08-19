@@ -6,6 +6,7 @@ export let iy;
 export let iz;
 export let type;
 export let size;
+export let data;
 export let isPadding;
 export let isActive;
 export let posStyle;
@@ -40,7 +41,7 @@ const deactivate = () => {
     <div class="side inline-box border border-white border-opacity-25 absolute side-efgh"></div>
     <div class="side inline-box border border-white border-opacity-25 absolute side-abef"></div>
     <div class="side inline-box border border-white border-opacity-25 absolute side-cdgh"></div>
-    <div class="side inline-box border border-white border-opacity-25 absolute side-aceg"></div>
+    <div class="side inline-box border border-white border-opacity-25 absolute side-aceg">{data === undefined || isPadding ? '' : data}</div>
     <div class="side inline-box border border-white border-opacity-25 absolute side-bdfh"></div>
 </div>
 

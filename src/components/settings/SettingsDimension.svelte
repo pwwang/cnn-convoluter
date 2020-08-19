@@ -1,4 +1,5 @@
 <script>
+import { Matrix } from '../../math.js';
 import SettingsOneDim from "./SettingsOneDim.svelte";
 
 export let value;

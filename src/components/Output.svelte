@@ -5,20 +5,22 @@ import MatrixDrawer from './drawings/MatrixDrawer.svelte';
 
 export let output;
 export let visual;
+export let showData;
 export let actives;
 export let scene;
 </script>
 
 <Container>
     <div slot="title">
-        Output [{output}]
+        Output [{output.size}]
     </div>
     <div slot="content" class="text-center">
     {#if visual}
         <MatrixDrawer
-            dim={output}
+            showData={showData}
             actives={actives}
             bind:scene={scene}
+            data={output}
             on:activate
             on:deactivate
             on:mousedown
