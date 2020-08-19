@@ -25,5 +25,6 @@ npm run build
 
 ## Todos
 
-- [ ] Transposed convolution?
 - [x] Loading data?
+- [ ] Pooling layers?
+- [ ] Transposed convolution?

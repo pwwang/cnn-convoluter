@@ -12,8 +12,6 @@ import {
 } from "./settings.js";
 
 let settings = 	copySettings(defaultSettings);
-// The default angle for the cube view
-const defaultAngle = 30;
 
 $: dims = settings.dims[settings.dimty];
 
@@ -102,6 +100,7 @@ $: rotateScene = (newX, newY) => {
         'rotateY('+ newY +'deg) rotateX('+ newX +'deg)';
     sceneOutput.style.transform =
         'rotateY('+ newY +'deg) rotateX('+ newX +'deg)';
+
 	if (sceneKernelInput)
 		sceneKernelInput.style.transform =
 			'rotateY('+ newY +'deg) rotateX('+ newX +'deg)';
@@ -123,7 +122,7 @@ $: sceneControl = (event) => {
 };
 
 $: resetControl = () => {
-	rotateScene(defaultAngle, 90 + defaultAngle);
+	rotateScene(-20, 45);
 };
 
 </script>

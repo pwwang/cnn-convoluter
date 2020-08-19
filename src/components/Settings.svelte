@@ -123,6 +123,7 @@ $: settings.dims[settings.dimty].kernel.data.resize(
         {#if settings.visual}
         <Switch
             bind:value={settings.showData}
+            on:change={() => setTimeout(resetView, 100)}
             label={settings.showData ? 'Hide Data' : 'Show Data'}
         />
         {/if}
@@ -137,7 +138,7 @@ $: settings.dims[settings.dimty].kernel.data.resize(
             small
             flat
             color="blue"
-            on:click = {resetView}>
+            on:click={resetView}>
             Reset View
         </Button>
         {/if}
