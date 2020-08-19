@@ -14,9 +14,10 @@ th.svelte-1qy4u3g .asc.svelte-1qy4u3g{transform:rotate(180deg)}
 		"settings-cell kernel-cell kernel-cell"
 		"settings-cell input-cell output-cell"}.grid-container.svelte-5h6zwf>.header-cell.svelte-5h6zwf{grid-area:header-cell}.grid-container.svelte-5h6zwf>.settings-cell.svelte-5h6zwf{grid-area:settings-cell}.grid-container.svelte-5h6zwf>.kernel-cell.svelte-5h6zwf{grid-area:kernel-cell}.grid-container.svelte-5h6zwf>.input-cell.svelte-5h6zwf{grid-area:input-cell}.grid-container.svelte-5h6zwf>.output-cell.svelte-5h6zwf{grid-area:output-cell}
 .header.svelte-fencju{align-items:center}
+.align-items-center.svelte-1kj5jb1{align-items:center}
 .tooltip{left:110% !important;top:-10px !important;transform:none !important}
 .cube.svelte-1nufao7{transform-style:preserve-3d;transform-origin:center center;width:calc(var(--size) * 1px);height:calc(var(--size) * 1px)}.side.svelte-1nufao7{background:inherit;box-sizing:border-box;width:calc(var(--size) * 1px);height:calc(var(--size) * 1px)}.side-abcd.svelte-1nufao7{top:0;left:0}.side-efgh.svelte-1nufao7{top:0;left:0;transform:translateZ(calc(var(--size) * 1px))}.side-abef.svelte-1nufao7{top:0;left:0;transform-origin:top left;transform:rotateX(90deg)}.side-cdgh.svelte-1nufao7{bottom:0;left:0;transform-origin:bottom left;transform:rotateX(-90deg)}.side-aceg.svelte-1nufao7{top:0;left:0;transform-origin:top left;transform:rotateY(-90deg)}.side-bdfh.svelte-1nufao7{top:0;right:0;transform-origin:top right;transform:rotateY(90deg)}
 .matrix-wrapper.svelte-nkb3w{display:inline-grid;grid-gap:1px;grid-template-rows:repeat(var(--matrix-nrows), min-content);grid-template-columns:repeat(var(--matrix-ncols), min-content)}
-.matrix-wrapper.svelte-gjkkpj,.relative.svelte-gjkkpj{min-height:calc(var(--scene-size) * 1px)}.scene.svelte-gjkkpj{top:50%;left:50%;transform-style:preserve-3d;transform-origin:center center}
+.matrix-wrapper.svelte-1g7ubme,.relative.svelte-1g7ubme{min-width:calc(var(--scene-size) * 1px);min-height:calc(var(--scene-size) * 1px)}.scene.svelte-1g7ubme{top:50%;left:50%;transform-style:preserve-3d;transform-origin:center center}
 
 /*# sourceMappingURL=bundle.css.map */
