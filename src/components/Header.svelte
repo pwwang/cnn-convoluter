@@ -9,7 +9,7 @@
     <div class="social pr-8">
         <a href="https://github.com/pwwang/cnn-convoluter" target="_blank"
            class="inline-block">
-            <img src="/github.png" alt="Github" width="32" height="32" />
+            <img src="./github.png" alt="Github" width="32" height="32" />
         </a>
     </div>
 </div>
