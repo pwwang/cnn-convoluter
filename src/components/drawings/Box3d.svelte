@@ -11,13 +11,13 @@ export let isPadding;
 export let isActive;
 export let posStyle;
 
-$: typeClasses = (ix+iy+iz===0) ? 'bg-alert-900' : (isPadding ? 'bg-gray-600' : (
-    type === 'kernel' ? 'bg-primary-900' : (
-        type === 'input' ? 'bg-secondary-900' : 'bg-blue-900'
+$: typeClasses = (ix+iy+iz===0) ? 'bg-rose-500' : (isPadding ? 'bg-gray-600' : (
+    type === 'kernel' ? 'bg-fuchsia-400' : (
+        type === 'input' ? 'bg-cyan-600' : 'bg-blue-500'
     )
 ));
 
-$: activeClasses = isActive ? 'bg-opacity-100' : 'bg-opacity-25';
+$: activeClasses = isActive ? 'bg-opacity-75' : 'bg-opacity-25';
 
 const dispatcher = createEventDispatcher();
 
@@ -37,12 +37,12 @@ const deactivate = () => {
     style="--size: {size}; {posStyle};"
     on:mouseenter={activate}
     on:mouseleave={deactivate}>
-    <div class="side inline-box border border-white border-opacity-25 absolute side-abcd"></div>
-    <div class="side inline-box border border-white border-opacity-25 absolute side-efgh"></div>
-    <div class="side inline-box border border-white border-opacity-25 absolute side-abef"></div>
-    <div class="side inline-box border border-white border-opacity-25 absolute side-cdgh"></div>
-    <div class="side inline-box border border-white border-opacity-25 absolute side-aceg">{data === undefined || isPadding ? '' : data}</div>
-    <div class="side inline-box border border-white border-opacity-25 absolute side-bdfh"></div>
+    <div class="side inline-box border border-white border-gray-200/25 absolute side-abcd"></div>
+    <div class="side inline-box border border-white border-gray-200/25 absolute side-efgh"></div>
+    <div class="side inline-box border border-white border-gray-200/25 absolute side-abef"></div>
+    <div class="side inline-box border border-white border-gray-200/25 absolute side-cdgh"></div>
+    <div class="side inline-box border border-white border-gray-200/25 absolute side-aceg">{data === undefined || isPadding ? '' : data}</div>
+    <div class="side inline-box border border-white border-gray-200/25 absolute side-bdfh"></div>
 </div>
 
 <style>

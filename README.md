@@ -20,7 +20,6 @@ npm run build
 ## Implementation
 
 - Svelte
-- Smelte
 - CSS 3D for 3D drawing
 
 ## Todos

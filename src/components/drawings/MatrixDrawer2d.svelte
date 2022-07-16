@@ -1,5 +1,6 @@
 <script>
-import { Icon } from 'smelte';
+import Close from "carbon-icons-svelte/lib/Close.svelte";
+import TextAlignJustify from "carbon-icons-svelte/lib/TextAlignJustify.svelte";
 import Box2d from "./Box2d.svelte";
 
 // The type: kernel/input/output
@@ -72,7 +73,7 @@ $: isActive = (irow, icol) => {
 </div>
 
 {#if showData && type === 'kernel'}
-<Icon class="cursor-pointer px-2">clear</Icon>
+<Close />
 
 <div
     class="matrix-wrapper mx-auto"
@@ -93,7 +94,7 @@ $: isActive = (irow, icol) => {
     {/each}
 </div>
 
-<Icon class="cursor-pointer px-2">drag_handle</Icon>
+<TextAlignJustify />
 
 <div class="matrix-wrapper">
     <Box2d

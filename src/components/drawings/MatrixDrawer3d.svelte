@@ -1,5 +1,6 @@
 <script>
-import { Icon } from 'smelte';
+import Close from "carbon-icons-svelte/lib/Close.svelte";
+import TextAlignJustify from "carbon-icons-svelte/lib/TextAlignJustify.svelte";
 import { onMount, createEventDispatcher } from 'svelte';
 import Box3d from "./Box3d.svelte";
 
@@ -94,7 +95,7 @@ onMount(() => dispatcher('mount'));
 </div>
 
 {#if showData && type === 'kernel'}
-<Icon class="cursor-pointer">clear</Icon>
+<Close />
 
 <div
     class="matrix-wrapper"
@@ -123,7 +124,7 @@ onMount(() => dispatcher('mount'));
     </div>
 </div>
 
-<Icon class="cursor-pointer">drag_handle</Icon>
+<TextAlignJustify />
 
 <div class="matrix-wrapper"
     style="--scene-size: {boxsize * 1 + 100};">

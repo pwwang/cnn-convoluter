@@ -1,5 +1,5 @@
 <script>
-import Image from 'smelte/src/components/Image';
+import { ImageLoader } from "carbon-components-svelte";
 import Container from './Container.svelte';
 import MatrixDrawer from './drawings/MatrixDrawer.svelte';
 
@@ -27,7 +27,7 @@ export let scene
             on:mount
             type="input" />
     {:else}
-        <Image
+        <ImageLoader
             src="https://via.placeholder.com/300x300.png?text=Visualization+disabled."
             alt="Visualization disabled." />
     {/if}

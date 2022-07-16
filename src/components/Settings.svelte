@@ -1,7 +1,8 @@
 <script>
 import { createEventDispatcher } from "svelte";
 
-import {Tooltip, Button, Slider, Icon, Dialog, Snackbar} from "smelte";
+import Reset from "carbon-icons-svelte/lib/Reset.svelte";
+import {TooltipIcon, TooltipDefinition, Button, Slider, Modal, ToastNotification} from "carbon-components-svelte";
 import Container from './Container.svelte';
 import SettingsDimension from './settings/SettingsDimension.svelte';
 import Switch from './settings/Switch.svelte';
@@ -91,110 +92,107 @@ $: settings.dims[settings.dimty].kernel.data.resize(
 
 <Container>
     <div slot="title" class="flex flex-row" style="align-items: center;">
-        <div>Settings</div>
+        <h4>Settings</h4>
         <div class="leading-none flex-grow text-right">
-            <Tooltip>
-                <div slot="activator">
-                    <Icon
-                        on:click={() => settings = copySettings(defaultSettings)}
-                        class="cursor-pointer">
-                        settings_backup_restore
-                    </Icon>
-                </div>
-                Reset settings
-            </Tooltip>
+            <TooltipIcon
+                tooltipText="Reset settings"
+                icon={Reset}
+                on:click={ () => settings = copySettings(defaultSettings) }
+            >
+            </TooltipIcon>
         </div>
     </div>
     <div slot="content">
 
-        <div class="subtitle-1 font-medium mb-1">Visualization</div>
-        <Tooltip>
-            <div slot="activator">
-                <Switch
-                    bind:value={settings.visual}
-                    class="w-32"
-                    label={settings.visual ? 'Disable' : 'Enable'}
-                />
-            </div>
-            You can disable visualization, with just dimension calculation. <br />
-            This is useful when you have large dimensions that your browser can't visualize them.
-        </Tooltip>
+        <h5>Visualization</h5>
+        <TooltipDefinition
+            tooltipText="You can disable visualization, with just dimension calculation. This is useful when you have large dimensions that your browser can't visualize them."
+            align="start"
+        >
+            <Switch
+                bind:value={settings.visual}
+                class="w-32"
+                labelA="Disabled"
+                labelB="Enabled"
+            />
+        </TooltipDefinition>
 
         {#if settings.visual}
         <Switch
             bind:value={settings.showData}
             on:change={() => setTimeout(resetView, 100)}
-            label={settings.showData ? 'Hide Data' : 'Show Data'}
+            labelA="Data hidden"
+            labelB="Data shown"
         />
         {/if}
 
         {#if settings.dimty === 3}
+        <br />
         <Switch
             bind:value={controlStart}
             class="w-32"
-            label={controlStart ? 'Stop Control' : 'Start Control'}
+            labelA="No control"
+            labelB="Controling"
         />
         <Button
-            small
-            flat
-            color="blue"
+            kind="primary"
+            size="small"
             on:click={resetView}>
             Reset View
         </Button>
         {/if}
 
-        <div class="subtitle-1 font-medium mb-1 mt-3">
-            Dimensionality: {settings.dimty}
-        </div>
+        <h5>Dimensionality: {settings.dimty}</h5>
         <div on:mousedown|stopPropagation={() => {settings.autoWalker = false}}>
             <Slider
                 min={1}
                 max={3}
+                hideTextInput
                 bind:value={settings.dimty} />
         </div>
 
-        <div class="subtitle-1 font-medium mb-1 mt-3">
-            Input
-        </div>
-        <div class="body-2">Dimension</div>
+        <h5>Input</h5>
+        <h6>Dimension</h6>
         <SettingsDimension min={1} bind:value={settings.dims[settings.dimty].input.size} />
-        <div class="body-2">Padding</div>
+        <h6>Padding</h6>
         <SettingsDimension
             bind:value={settings.dims[settings.dimty].input.padding} />
         {#if settings.showData}
-        <div class="body-2">Data</div>
+        <h6>Data</h6>
         <Button
-            small
-            flat
-            on:click = { () => {dataType = 'input'; randomDataUpdate();} }>
+            kind="primary"
+            size="small"
+            on:click={ () => {dataType = 'input'; randomDataUpdate();} }>
             Random
         </Button>
         <Button
-            small
-            flat
-            on:click = {() => {dataType = 'input'; showDataDialog = true;}}>
+            kind="primary"
+            size="small"
+            on:click={() => {dataType = 'input'; showDataDialog = true;}}>
             Paste
         </Button>
-        <Dialog bind:value={showDataDialog} class="w-1/2 h-auto" persistent>
-            <h5 slot="title">Paste your {dataType} data:</h5>
-            <div class="text-gray-700">Whitespace (tab/space) delimited. </div>
-            <div class="text-gray-700">For 3D data, use <code class="border">---</code> to separate at dim 0.</div>
-            <div class="text-gray-700 mb-1">Only integers from 0 to 10 allowed.</div>
+        <Modal
+            bind:open={showDataDialog}
+            preventCloseOnClickOutside
+            size="lg"
+            modalHeading={`Paste your ${dataType} data:`}
+            primaryButtonText="Apply"
+            secondaryButtons={[{ text: "Cancel" }, { text: "Random" }]}
+            on:click:button--secondary={({ detail }) => {
+                if (detail.text === "Cancel") {
+                    showDataDialog = false;
+                    dataInput.value = '';
+                } else if (detail.text === "Random") {
+                    randomDataToTextarea(dataInput)
+                }
+            }}
+            on:click:button--primary={() => saveData(dataInput)}
+            >
+            <p>Whitespace (tab/space) delimited. </p>
+            <p>For 3D data, use <code class="border">---</code> to separate at dim 0.</p>
+            <p>Only integers from 0 to 10 allowed.</p>
             <textarea class="border w-full h-64" bind:this={dataInput}></textarea>
-            <div slot="actions">
-                <Button text
-                    on:click={() => randomDataToTextarea(dataInput)}>
-                    Random
-                </Button>
-                <Button text
-                    on:click={() => saveData(dataInput)}>
-                    Apply
-                </Button>
-                <Button text color="alert"
-                    on:click={() => {showDataDialog = false; dataInput.value = ''}}>Cancel
-                </Button>
-            </div>
-        </Dialog>
+        </Modal>
         {/if}
 
         <div class="subtitle-1 font-medium mb-1 mt-3">
@@ -208,6 +206,9 @@ $: settings.dims[settings.dimty].kernel.data.resize(
         <Slider
             min={1}
             max={3}
+            minLabel="conv"
+            maxLabel="avgpool"
+            hideTextInput
             bind:value={kernelType} />
         {/if}
 
@@ -235,55 +236,58 @@ $: settings.dims[settings.dimty].kernel.data.resize(
         {#if settings.showData && kernelType === 1}
         <div class="body-2">Data</div>
         <Button
-            small
-            flat
-            on:click = { () => {dataType = 'kernel'; randomDataUpdate();} }>
+            kind="primary"
+            size="small"
+            on:click={ () => {dataType = 'kernel'; randomDataUpdate();} }>
             Random
         </Button>
         <Button
-            small
-            flat
-            on:click = {() => {dataType = 'kernel'; showDataDialog = true;}}>
+            kind="primary"
+            size="small"
+            on:click={() => {dataType = 'kernel'; showDataDialog = true;}}>
             Paste
         </Button>
         {/if}
 
-        <div class="subtitle-1 font-medium mb-1 mt-3">AutoWalker</div>
-        <Tooltip>
-            <div slot="activator">
-                <Button
-                    small
-                    flat
-                    light={!settings.autoWalker}
-                    disabled={!settings.visual}
-                    on:click = {() => settings.autoWalker = !settings.autoWalker}
-                    value={settings.autoWalker}>
-                    {settings.autoWalker ? 'Stop' : 'Start'}
-                </Button>
-            </div>
-            autoWalker will be automatically stopped while you hover on the input or output.
-        </Tooltip>
+        <h5>AutoWalker</h5>
+
+        <Switch
+            bind:value={settings.autoWalker}
+            disabled={!settings.visual}
+            class="w-32"
+            on:tobble={ (e) => settings.autoWalker = e.detail }
+        />
 
     </div>
 </Container>
 
-<Snackbar
-  noAction
-  color="alert"
-  hash="dataerror"
-  timeout={2000}
-  class="pointer-events-auto flex absolute py-2 text-sm
-         px-4 z-30 mb-4 content-between mx-auto
-         rounded items-center elevation-2"
-  left
-  value={dataError}>
-  <div>{dataErrorMsg}</div>
-</Snackbar>
+{#if dataError}
+<ToastNotification
+    lowContrast
+    hideCloseButton
+    kind="warning"
+    timeout={2000}
+    on:close={() => dataError = false}
+    title={dataErrorMsg}
+    caption={new Date().toLocaleString()}
+    class="fixed bottom-0 left-2" />
+{/if}
 
 <style>
-:global(.tooltip) {
-    left: 110% !important;
-    top: -10px !important;
-    transform: none !important;
+h5 {
+    margin-top: 0.5rem;
+    margin-bottom: -0.1rem;
+    border-bottom: 1px dashed #ccc;
+}
+h6 {
+    margin-top: 0.3rem;
+    margin-bottom: 0.1rem;
+}
+:global(.bx--tooltip__trigger.bx--tooltip__trigger--definition) {
+    border-bottom: 0;
+}
+
+:global(.bx--tooltip--definition .bx--tooltip__trigger) {
+    border-bottom: 0;
 }
 </style>

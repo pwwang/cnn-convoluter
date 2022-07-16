@@ -1,10 +1,10 @@
 <script>
-import { Matrix } from '../../math.js';
+// import { Matrix } from '../../math.js';
 import SettingsOneDim from "./SettingsOneDim.svelte";
 
 export let value;
-export let errorMsg;
-export let min;
+export let errorMsg = "";
+export let min = 0;
 
 </script>
 

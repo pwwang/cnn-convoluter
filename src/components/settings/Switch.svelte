@@ -1,11 +1,13 @@
 <script>
 import { createEventDispatcher } from 'svelte';
-import { Switch } from "smelte";
+import { Toggle } from "carbon-components-svelte";
 
 export let value = false;
-export let label = "";
-export let color = "primary";
-export let classes = 'inline-flex mb-1 items-center cursor-pointer z-10';
+export let labelA = "Off";
+export let labelB = "On";
+export let disabled = false;
+// export let color = "primary";
+// export let classes = 'inline-flex mb-1 items-center cursor-pointer z-10';
 
 const dispatcher = createEventDispatcher();
 
@@ -17,11 +19,12 @@ const change = () => {
 </script>
 
 <div class="inline-block {$$props.class}" on:click|capture|stopPropagation={change}>
-    <Switch
-        value={value}
-        label={label}
-        color={color}
-        labelClasses='body-2 pl-2 cursor-pointer'
-        classes={classes}
+    <Toggle
+        bind:toggled={value}
+        size="sm"
+        disabled={disabled}
+        labelA={labelA}
+        labelB={labelB}
+        on:toggle
     />
 </div>

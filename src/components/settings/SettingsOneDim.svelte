@@ -1,6 +1,5 @@
 <script>
-import { v4 as uuidv4 } from 'uuid';
-import { Snackbar } from 'smelte';
+import { ToastNotification } from 'carbon-components-svelte';
 
 // valid value
 export let value;
@@ -31,7 +30,7 @@ $: if (bindVal === undefined) {
     value = Number(bindVal);
     classes = [
         ...baseClasses,
-        "border-primary-400",
+        "border-fuchsia-400",
         hovered ? "bg-primary-transDark" : "bg-primary-transLight"
     ];
 }
@@ -58,15 +57,14 @@ const handleKeyup = (event) => {
     on:focus={e => e.target.select()}
     disabled={value === undefined}
     class={classes.join(" ")} />
-<Snackbar
-  noAction
-  hash={uuidv4()}
-  color="error"
-  timeout={2000}
-  class="pointer-events-auto flex absolute py-2 text-sm
-         px-4 z-30 mb-4 content-between mx-auto
-         rounded items-center elevation-2"
-  left
-  bind:value={error}>
-  <div>{errorMsg}</div>
-</Snackbar>
+
+{#if error}
+<ToastNotification
+    lowContrast
+    hideCloseButton
+    kind="error"
+    timeout={2000}
+    title={errorMsg}
+    caption={new Date().toLocaleString()}>
+</ToastNotification>
+{/if}

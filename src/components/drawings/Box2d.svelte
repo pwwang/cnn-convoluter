@@ -14,12 +14,12 @@ $: sizeClasses = size === 'with-data' ? 'h-4 w-4' : (size === 'small' ? 'h-1 w-1
 ));
 
 $: typeClasses = isPadding ? 'bg-gray-500' : (
-    type === 'kernel' ? 'bg-primary-900' : (
-        type === 'input' ? 'bg-secondary-900' : 'bg-blue-900'
+    type === 'kernel' ? 'bg-fuchsia-400' : (
+        type === 'input' ? 'bg-cyan-600' : 'bg-blue-500'
     )
 );
 
-$: activeClasses = isActive ? 'bg-opacity-100' : 'bg-opacity-50';
+$: activeClasses = isActive ? "opacity-100" : "opacity-50";
 
 const dispatcher = createEventDispatcher();
 

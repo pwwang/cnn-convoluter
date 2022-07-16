@@ -1,0 +1,32 @@
+.grid-container {
+	display: grid;
+	height: 100vh;
+	grid-gap: 2px;
+	grid-template-columns: 360px 1fr 1fr;
+	grid-template-rows: max-content max-content auto;
+	grid-template-areas:
+		"header-cell header-cell header-cell"
+		"settings-cell kernel-cell kernel-cell"
+		"settings-cell input-cell output-cell";
+}
+
+
+.grid-container > .header-cell {
+	grid-area: header-cell;
+}
+
+.grid-container > .settings-cell {
+	grid-area: settings-cell;
+}
+
+.grid-container > .kernel-cell {
+	grid-area: kernel-cell;
+}
+
+.grid-container > .input-cell {
+	grid-area: input-cell;
+}
+
+.grid-container > .output-cell {
+	grid-area: output-cell;
+}
