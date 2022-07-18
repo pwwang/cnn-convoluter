@@ -143,11 +143,14 @@ $: settings.dims[settings.dimty].kernel.data.resize(
         {/if}
 
         <h5>Dimensionality: {settings.dimty}</h5>
-        <div on:mousedown|stopPropagation={() => {settings.autoWalker = false}}>
+        <div>
             <Slider
                 min={1}
                 max={3}
                 hideTextInput
+                on:change={() => {
+                    settings.autoWalker = false
+                }}
                 bind:value={settings.dimty} />
         </div>
 
